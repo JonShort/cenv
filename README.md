@@ -1,4 +1,5 @@
 # cenv - environment variable file changer
+[![Continuous integration](https://github.com/JonShort/cenv/actions/workflows/tests.yml/badge.svg)](https://github.com/JonShort/cenv/actions/workflows/tests.yml)
 
 Using a comment pattern in your .env files, easily swap between envs in local development.
 
