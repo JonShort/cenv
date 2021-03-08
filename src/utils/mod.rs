@@ -109,6 +109,7 @@ mod read_env_file_tests {
         let result = read_env_file();
         assert_ne!(result, Err("Unable to read .env file"));
     }
+
     #[test]
     fn returns_expected_content() {
         let result = read_env_file();
@@ -127,5 +128,30 @@ TEST_B=3
 ",
         );
         assert_eq!(result, Ok(EnvContents { contents }));
+    }
+}
+
+#[cfg(test)]
+mod write_to_file_tests {
+    use super::*;
+
+    #[test]
+    fn does_not_error() {
+        let contents = String::from(
+            "# ++ one ++
+# TEST_A=1
+# TEST_B=1
+
+# ++ two ++
+# TEST_A=2
+# TEST_B=2
+
+# ++ three ++
+TEST_A=3
+TEST_B=3
+",
+        );
+        let result = write_to_file(EnvContents::new(contents));
+        assert_eq!(result, Ok(()));
     }
 }
