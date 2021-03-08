@@ -14,7 +14,7 @@ fn main() {
         process::exit(1);
     });
 
-    let new_env = parser::parse_env(env, &config);
+    let new_env = parser::parse_env(&env, &config);
 
     match utils::write_to_file(new_env) {
         Ok(_) => println!("Updated .env to {}", &config.keyword),
