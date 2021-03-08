@@ -20,7 +20,7 @@ VARIABLE_1=something
 cenv live
 ```
 
-3. Check your .env, the keyworded env vars will now be uncommented, and an "(active)" flag will appear on the chosen keyword
+3. Check your .env, the keyworded env vars will now be uncommented
 ```.env
 VARIABLE_1=something
 
@@ -28,7 +28,7 @@ VARIABLE_1=something
 # API_ADDRESS=http://localhost:5000
 # REQUIRE_LOGIN=false
 
-# ++ live ++ (active)
+# ++ live ++
 API_ADDRESS=https://myliveapi.com
 REQUIRE_LOGIN=true
 ```
