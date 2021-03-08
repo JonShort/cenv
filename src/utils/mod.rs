@@ -49,7 +49,7 @@ pub fn read_env_file() -> Result<EnvContents, &'static str> {
     Ok(EnvContents { contents })
 }
 
-pub fn write_to_file(env: EnvContents) -> Result<(), String> {
+pub fn write_to_file(env: &EnvContents) -> Result<(), String> {
     let mut file = match fs::File::create(".env") {
         Ok(f) => f,
         Err(e) => return Err(format!("Unable to write .env file - {}", e)),
@@ -104,14 +104,34 @@ mod env_contents_tests {
 mod read_env_file_tests {
     use super::*;
 
+    fn setup() {
+        let contents = String::from(
+            "# ++ one ++
+# TEST_A=1
+# TEST_B=1
+
+# ++ two ++
+# TEST_A=2
+# TEST_B=2
+
+# ++ three ++
+TEST_A=3
+TEST_B=3
+",
+        );
+        write_to_file(&EnvContents::new(contents)).unwrap();
+    }
+
     #[test]
     fn does_not_error() {
+        setup();
         let result = read_env_file();
         assert_ne!(result, Err("Unable to read .env file"));
     }
 
     #[test]
     fn returns_expected_content() {
+        setup();
         let result = read_env_file();
         let contents = String::from(
             "# ++ one ++
@@ -151,7 +171,7 @@ TEST_A=3
 TEST_B=3
 ",
         );
-        let result = write_to_file(EnvContents::new(contents));
+        let result = write_to_file(&EnvContents::new(contents));
         assert_eq!(result, Ok(()));
     }
 }
