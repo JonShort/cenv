@@ -5,36 +5,28 @@ lazy_static! {
     static ref KEYWORD_REGEX: Regex = Regex::new(r"^#+ *\+\+ *(\w+)").unwrap();
 }
 
-fn is_empty(line: &str) -> bool {
-    line == ""
-}
-
 fn parse_as_active(line: &str) -> String {
     let mut line_chars = line.chars();
-    let result = match line_chars.next() {
+    match line_chars.next() {
         Some('#') => {
             line_chars.next();
             String::from(line_chars.as_str())
         }
         Some(_) => String::from(line),
         None => String::from(line),
-    };
-
-    result
+    }
 }
 
 fn parse_as_inactive(line: &str) -> String {
     let mut line_chars = line.chars();
-    let result = match line_chars.next() {
+    match line_chars.next() {
         Some('#') => String::from(line),
         Some(_) => format!("{}{}", "# ", line),
         None => String::from(line),
-    };
-
-    result
+    }
 }
 
-fn resolve_keyword<'a>(line: &'a str) -> Option<&'a str> {
+fn resolve_keyword(line: &str) -> Option<&str> {
     let keyword = match KEYWORD_REGEX.captures(line) {
         Some(caps) => caps.get(1).map_or("", |m| m.as_str()),
         None => return None,
@@ -49,22 +41,19 @@ pub fn parse_env(env: &EnvContents, config: &Config) -> EnvContents {
     let mut parse_status = ParseStatus::Ignore;
 
     let collected = lines.map(|line| {
-        if is_empty(line) {
+        if line.is_empty() {
             parse_status = ParseStatus::Ignore;
             return String::from(line);
         }
 
-        match resolve_keyword(line) {
-            Some(kw) => {
-                if kw == config.keyword {
-                    parse_status = ParseStatus::Active;
-                    return String::from(line);
-                } else {
-                    parse_status = ParseStatus::Inactive;
-                    return String::from(line);
-                }
+        if let Some(keyword) = resolve_keyword(line) {
+            if keyword == config.keyword {
+                parse_status = ParseStatus::Active;
+                return String::from(line);
+            } else {
+                parse_status = ParseStatus::Inactive;
+                return String::from(line);
             }
-            None => (),
         };
 
         match parse_status {
@@ -80,21 +69,6 @@ pub fn parse_env(env: &EnvContents, config: &Config) -> EnvContents {
     let collected = collected + "\n";
 
     EnvContents::new(collected)
-}
-
-#[cfg(test)]
-mod is_empty_tests {
-    use super::*;
-
-    #[test]
-    fn true_if_empty() {
-        assert_eq!(is_empty(""), true);
-    }
-
-    #[test]
-    fn false_if_not() {
-        assert_eq!(is_empty(" "), false);
-    }
 }
 
 #[cfg(test)]

@@ -56,9 +56,9 @@ pub fn write_to_file(env: EnvContents) -> Result<(), String> {
     };
 
     match file.write_all(env.contents.as_bytes()) {
-        Ok(_) => return Ok(()),
-        Err(e) => return Err(format!("Unable to write .env file - {}", e)),
-    };
+        Ok(_) => Ok(()),
+        Err(e) => Err(format!("Unable to write .env file - {}", e)),
+    }
 }
 
 #[cfg(test)]
