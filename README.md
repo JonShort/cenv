@@ -11,9 +11,11 @@ VARIABLE_1=something
 
 # ++ local ++
 # API_ADDRESS=http://localhost:5000
+# REQUIRE_LOGIN=false
 
 # ++ live ++
 # API_ADDRESS=https://myliveapi.com
+# REQUIRE_LOGIN=true
 ```
 
 2. Run cenv, choosing an env keyword to use
