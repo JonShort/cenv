@@ -1,0 +1,49 @@
+name: Release
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Build
+        run: |
+          cargo build --release --target x86_64-apple-darwin
+          mv target/x86_64-apple-darwin/release/cenv ./cenv
+          chmod +x cenv
+          tar -czf cenv-macos-x86_64.tar.gz cenv
+      - name: Publish release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: cenv-*
+          draft: true
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release-win:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Build
+        shell: powershell
+        run: |
+          cargo build --release --target x86_64-pc-windows-msvc
+          Compress-Archive -Path ".\target\x86_64-pc-windows-msvc\release\cenv.exe" -DestinationPath ".\cenv-win-x64.zip"
+      - name: Publish release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: cenv-*
+          draft: true
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
