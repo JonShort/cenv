@@ -5,6 +5,26 @@
 
 Using a comment pattern in your .env files, easily swap between envs in local development.
 
+## Installation
+
+### macOS
+
+Install via. [homebrew](https://brew.sh/)
+
+1. Connect to the [cenv tap](https://github.com/JonShort/homebrew-cenv)
+```bash
+brew tap jonshort/cenv
+```
+
+2. Install `cenv` from the tap
+```bash
+brew install cenv
+```
+
+### Windows (untested)
+
+Download the latest binary from the [releases page](https://github.com/JonShort/cenv/releases)
+
 ## Usage
 
 1. Add the "cenv" pattern to your .env file
@@ -37,3 +57,9 @@ VARIABLE_1=something
 API_ADDRESS=https://myliveapi.com
 REQUIRE_LOGIN=true
 ```
+
+## Releasing a new version
+
+1. Ensure [CHANGELOG.md](https://github.com/JonShort/cenv/blob/main/CHANGELOG.md) is updated on main branch
+2. Push a tag to origin matching the version referenced in the changelog
+3. Follow the instructions in [homebrew-cenv](https://github.com/JonShort/homebrew-cenv) to ensure the new version is available via. homebrew
