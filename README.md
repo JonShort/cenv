@@ -21,9 +21,11 @@ brew tap jonshort/cenv
 brew install cenv
 ```
 
-### Windows (untested)
+### Windows
 
-Download the latest binary from the [releases page](https://github.com/JonShort/cenv/releases)
+1. Download the latest binary from the [releases page](https://github.com/JonShort/cenv/releases)
+
+2. Decide if you want to execute the binary directly, or using [an environment variable](https://stackoverflow.com/questions/4822400/register-an-exe-so-you-can-run-it-from-any-command-line-in-windows)
 
 ## Usage
 
