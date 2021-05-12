@@ -35,10 +35,11 @@ fn resolve_keyword(line: &str) -> Option<&str> {
     Some(&keyword)
 }
 
-pub fn parse_env(env: &EnvContents, config: &Config) -> EnvContents {
+pub fn parse_env(env: &EnvContents, config: &Config) -> Result<EnvContents, String> {
     let lines = env.contents.lines();
 
     let mut parse_status = ParseStatus::Ignore;
+    let mut keyword_found = false;
 
     let collected = lines.map(|line| {
         if line.is_empty() {
@@ -48,6 +49,7 @@ pub fn parse_env(env: &EnvContents, config: &Config) -> EnvContents {
 
         if let Some(keyword) = resolve_keyword(line) {
             if keyword == config.keyword {
+                keyword_found = true;
                 parse_status = ParseStatus::Active;
                 return String::from(line);
             } else {
@@ -68,7 +70,13 @@ pub fn parse_env(env: &EnvContents, config: &Config) -> EnvContents {
     // Ensure we have an end-of-file newline
     let collected = collected + "\n";
 
-    EnvContents::new(collected)
+    match keyword_found {
+        true => Ok(EnvContents::new(collected)),
+        false => Err(format!(
+            "keyword \"{}\" was not found in .env file",
+            config.keyword
+        )),
+    }
 }
 
 #[cfg(test)]
@@ -151,32 +159,25 @@ mod parse_env_tests {
     use super::*;
 
     #[test]
-    fn no_change_if_keyword_not_found() {
+    fn err_if_keyword_not_found() {
         let provided = String::from(
             "
-KEY=value
-KEY=value
+    KEY=value
+    KEY=value
 
-KEY=value
-",
+    KEY=value
+    ",
         );
         let env = EnvContents::new(provided.clone());
         let args = vec![String::from("_"), String::from("keyword")];
         let config = Config::new(args.into_iter()).unwrap();
 
-        assert_eq!(parse_env(&env, &config), EnvContents::new(provided));
-    }
-
-    #[test]
-    fn no_change_if_empty() {
-        let provided = String::from(
-            "
-",
+        assert_eq!(
+            parse_env(&env, &config),
+            Err(String::from(
+                "keyword \"keyword\" was not found in .env file"
+            ))
         );
-        let env = EnvContents::new(provided.clone());
-        let args = vec![String::from("_"), String::from("keyword")];
-        let config = Config::new(args.into_iter()).unwrap();
-        assert_eq!(parse_env(&env, &config), EnvContents::new(provided));
     }
 
     #[test]
@@ -193,7 +194,7 @@ KEY=value
 ",
         );
         let env = EnvContents::new(provided);
-        let args = vec![String::from("_"), String::from("keyword")];
+        let args = vec![String::from("_"), String::from("b")];
         let config = Config::new(args.into_iter()).unwrap();
 
         let expected = String::from(
@@ -201,13 +202,13 @@ KEY=value
 # ++ a ++
 # KEY=value
 # ++ b ++
-# KEY=value
+KEY=value
 
 # ++ c ++
 # KEY=value
 ",
         );
-        assert_eq!(parse_env(&env, &config), EnvContents::new(expected));
+        assert_eq!(parse_env(&env, &config), Ok(EnvContents::new(expected)));
     }
 
     #[test]
@@ -238,7 +239,7 @@ KEY=value
 # KEY=value
 ",
         );
-        assert_eq!(parse_env(&env, &config), EnvContents::new(expected));
+        assert_eq!(parse_env(&env, &config), Ok(EnvContents::new(expected)));
     }
 
     #[test]
@@ -269,6 +270,6 @@ KEY=value
 # KEY=value
 ",
         );
-        assert_eq!(parse_env(&env, &config), EnvContents::new(expected));
+        assert_eq!(parse_env(&env, &config), Ok(EnvContents::new(expected)));
     }
 }

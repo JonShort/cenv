@@ -14,7 +14,13 @@ fn main() {
         process::exit(1);
     });
 
-    let new_env = parser::parse_env(&env, &config);
+    let new_env = match parser::parse_env(&env, &config) {
+        Ok(env) => env,
+        Err(e) => {
+            eprintln!("Problem parsing env: {}", e);
+            process::exit(1);
+        }
+    };
 
     match utils::write_to_file(&new_env) {
         Ok(_) => println!("Updated .env to {}", &config.keyword),
