@@ -6,9 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2021-05-12
+### Added
+- Alert and exit if keyword doesn't exist within file
+
 ## [0.0.1] - 2021-03-11
 ### Added
 - MVP functionality
 
-[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.0.1...HEAD
+[Unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/jonshort/cenv/releases/tag/v0.0.1...v1.0.0
 [0.0.1]: https://github.com/jonshort/cenv/releases/tag/v0.0.1
