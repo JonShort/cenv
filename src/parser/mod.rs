@@ -54,16 +54,7 @@ fn resolve_keyword(line: &str) -> Option<&str> {
 /// Core function which performs all parsing and returns results
 ///
 /// This function accepts and returns the structs available in the
-/// [utils](../utils/index.html) module:
-///
-/// # Examples
-///
-/// ```
-/// let config = utils::Config::new(env::args())?;
-/// let env = utils::read_env_file()?;
-///
-/// let new_env = parse_env(&env, &config)?;
-/// ```
+/// [utils](../utils/index.html) module.
 pub fn parse_env(env: &EnvContents, config: &Config) -> Result<EnvContents, String> {
     let lines = env.contents.lines();
 
