@@ -1,19 +1,22 @@
+//! Helper functions and data types
+//!
+//! This module provides business-logic agnostic helpers
+//! which can be used throughout the cenv codebase.
+//!
+//!
+
 use std::fs;
 use std::io::Write;
 
-#[derive(PartialEq)]
-pub enum ParseStatus {
-    Active,
-    Inactive,
-    Ignore,
-}
-
+/// Configuration of the current domain
 #[derive(PartialEq, Debug)]
 pub struct Config {
     pub keyword: String,
 }
 
 impl Config {
+    /// Accepts a list of arguments, usually an [Args][std::env::Args] struct
+    /// sourced from the [std::env::args] function.
     pub fn new<T>(mut args: T) -> Result<Config, &'static str>
     where
         T: Iterator<Item = String>,
@@ -30,6 +33,7 @@ impl Config {
     }
 }
 
+/// Details around the content to be parsed
 #[derive(PartialEq, Debug)]
 pub struct EnvContents {
     pub contents: String,
@@ -41,6 +45,7 @@ impl EnvContents {
     }
 }
 
+/// Reads .env file in execution scope
 pub fn read_env_file() -> Result<EnvContents, &'static str> {
     let contents = match fs::read_to_string(".env") {
         Ok(w) => w,
@@ -49,7 +54,8 @@ pub fn read_env_file() -> Result<EnvContents, &'static str> {
     Ok(EnvContents { contents })
 }
 
-pub fn write_to_file(env: &EnvContents) -> Result<(), String> {
+/// Writes to the .env file in execution scope
+pub fn write_env_file(env: &EnvContents) -> Result<(), String> {
     let mut file = match fs::File::create(".env") {
         Ok(f) => f,
         Err(e) => return Err(format!("Unable to write .env file - {}", e)),
@@ -119,7 +125,7 @@ TEST_A=3
 TEST_B=3
 ",
         );
-        write_to_file(&EnvContents::new(contents)).unwrap();
+        write_env_file(&EnvContents::new(contents)).unwrap();
     }
 
     #[test]
@@ -152,7 +158,7 @@ TEST_B=3
 }
 
 #[cfg(test)]
-mod write_to_file_tests {
+mod write_env_file_tests {
     use super::*;
 
     #[test]
@@ -171,7 +177,7 @@ TEST_A=3
 TEST_B=3
 ",
         );
-        let result = write_to_file(&EnvContents::new(contents));
+        let result = write_env_file(&EnvContents::new(contents));
         assert_eq!(result, Ok(()));
     }
 }

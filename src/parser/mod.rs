@@ -1,8 +1,24 @@
-use crate::utils::{Config, EnvContents, ParseStatus};
+//! Functions containing the core business logic around parsing.
+//!
+//! All of these functions encapsulate the "what" of cenv,
+//! including:
+//!
+//! - What constitutes a "keyword"
+//! - Which lines within the .env file should be updated
+//! - The format that should be returned to the callee
+
+use crate::utils::{Config, EnvContents};
 use regex::Regex;
 
 lazy_static! {
     static ref KEYWORD_REGEX: Regex = Regex::new(r"^#+ *\+\+ *(\w+)").unwrap();
+}
+
+#[derive(PartialEq)]
+enum ParseStatus {
+    Active,
+    Inactive,
+    Ignore,
 }
 
 fn parse_as_active(line: &str) -> String {
@@ -35,6 +51,10 @@ fn resolve_keyword(line: &str) -> Option<&str> {
     Some(&keyword)
 }
 
+/// Core function which performs all parsing and returns results
+///
+/// This function accepts and returns the structs available in the
+/// [utils](../utils/index.html) module.
 pub fn parse_env(env: &EnvContents, config: &Config) -> Result<EnvContents, String> {
     let lines = env.contents.lines();
 

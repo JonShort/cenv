@@ -22,7 +22,7 @@ fn main() {
         }
     };
 
-    match utils::write_to_file(&new_env) {
+    match utils::write_env_file(&new_env) {
         Ok(_) => println!("Updated .env to {}", &config.keyword),
         Err(e) => {
             eprintln!("Problem reading .env file: {}", e);
