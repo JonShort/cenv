@@ -15,6 +15,7 @@ pub struct Config {
 }
 
 impl Config {
+    /// Returns Result with error on keyword being an empty string
     pub fn new(keyword: &str) -> Result<Config, &'static str> {
         let keyword = match keyword {
             "" => return Err("Keyword missing"),
