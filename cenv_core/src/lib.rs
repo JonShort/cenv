@@ -6,3 +6,6 @@
 extern crate lazy_static;
 pub mod parser;
 pub mod utils;
+
+pub use parser::parse_env;
+pub use utils::{read_env_file, write_env_file, Config, EnvContents};

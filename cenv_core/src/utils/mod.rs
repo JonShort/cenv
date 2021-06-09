@@ -15,9 +15,19 @@ pub struct Config {
 }
 
 impl Config {
+    pub fn new(keyword: &str) -> Result<Config, &'static str> {
+        let keyword = match keyword {
+            "" => return Err("Keyword missing"),
+            word => word,
+        };
+
+        Ok(Config {
+            keyword: String::from(keyword),
+        })
+    }
     /// Accepts a list of arguments, usually an [Args][std::env::Args] struct
     /// sourced from the [std::env::args] function.
-    pub fn new<T>(mut args: T) -> Result<Config, &'static str>
+    pub fn new_from_args<T>(mut args: T) -> Result<Config, &'static str>
     where
         T: Iterator<Item = String>,
     {
@@ -73,13 +83,13 @@ mod config_tests {
     #[test]
     fn err_on_missing_keyword() {
         let args = vec![String::from("")];
-        let result = Config::new(args.into_iter());
+        let result = Config::new_from_args(args.into_iter());
         assert_eq!(result, Err("Keyword missing"))
     }
     #[test]
     fn returns_populated_config() {
         let args = vec![String::from(""), String::from("testing")];
-        let result = Config::new(args.into_iter()).unwrap();
+        let result = Config::new_from_args(args.into_iter()).unwrap();
         assert_eq!(
             result,
             Config {

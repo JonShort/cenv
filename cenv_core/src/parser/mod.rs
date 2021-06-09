@@ -190,7 +190,7 @@ mod parse_env_tests {
         );
         let env = EnvContents::new(provided.clone());
         let args = vec![String::from("_"), String::from("keyword")];
-        let config = Config::new(args.into_iter()).unwrap();
+        let config = Config::new_from_args(args.into_iter()).unwrap();
 
         assert_eq!(
             parse_env(&env, &config),
@@ -215,7 +215,7 @@ KEY=value
         );
         let env = EnvContents::new(provided);
         let args = vec![String::from("_"), String::from("b")];
-        let config = Config::new(args.into_iter()).unwrap();
+        let config = Config::new_from_args(args.into_iter()).unwrap();
 
         let expected = String::from(
             "
@@ -246,7 +246,7 @@ KEY=value
         );
         let env = EnvContents::new(provided);
         let args = vec![String::from("_"), String::from("b")];
-        let config = Config::new(args.into_iter()).unwrap();
+        let config = Config::new_from_args(args.into_iter()).unwrap();
 
         let expected = String::from(
             "
@@ -277,7 +277,7 @@ KEY=value
         );
         let env = EnvContents::new(provided);
         let args = vec![String::from("_"), String::from("b")];
-        let config = Config::new(args.into_iter()).unwrap();
+        let config = Config::new_from_args(args.into_iter()).unwrap();
 
         let expected = String::from(
             "
