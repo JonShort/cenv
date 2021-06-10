@@ -1,0 +1,13 @@
+[package]
+name = "cenv_core"
+version = "0.1.0"
+authors = ["JonShort <JonShort@users.noreply.github.com>"]
+edition = "2018"
+description = "The internals for the cenv project, designed to be shared amongst different implementations"
+license = "MIT"
+repository = "https://github.com/JonShort/cenv"
+include = ["src/**/*", "LICENSE"]
+
+[dependencies]
+lazy_static = "1.4"
+regex = "1.4"

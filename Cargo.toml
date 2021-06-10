@@ -3,9 +3,15 @@ name = "cenv"
 version = "0.1.0"
 authors = ["JonShort <JonShort@users.noreply.github.com>"]
 edition = "2018"
+license = "MIT"
+repository = "https://github.com/JonShort/cenv"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-lazy_static = "1.4"
-regex = "1.4"
+cenv_core = { path = "./cenv_core" }
+
+[workspace]
+members = [
+  "cenv_core"
+]

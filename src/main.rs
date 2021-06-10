@@ -1,11 +1,11 @@
 use std::env;
 use std::process;
 
-use cenv::parser;
-use cenv::utils;
+use cenv_core::parser;
+use cenv_core::utils;
 
 fn main() {
-    let config = utils::Config::new(env::args()).unwrap_or_else(|err| {
+    let config = utils::Config::new_from_args(env::args()).unwrap_or_else(|err| {
         eprintln!("Problem parsing arguments: {}", err);
         process::exit(1);
     });
