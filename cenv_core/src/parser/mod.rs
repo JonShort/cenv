@@ -71,11 +71,11 @@ pub fn parse_env(env: &EnvContents, config: &Config) -> Result<EnvContents, Stri
             if keyword == config.keyword {
                 keyword_found = true;
                 parse_status = ParseStatus::Active;
-                return String::from(line);
             } else {
                 parse_status = ParseStatus::Inactive;
-                return String::from(line);
             }
+
+            return String::from(line);
         };
 
         match parse_status {
