@@ -42,13 +42,29 @@ fn parse_as_inactive(line: &str) -> String {
     }
 }
 
-fn resolve_keyword(line: &str) -> Option<&str> {
+/// Supplementary function which returns the keyword within the provided
+/// line (if it exists)
+///
+/// This function accepts the EnvContents struct available in the
+/// [utils](../utils/index.html) module.
+pub fn resolve_keyword(line: &str) -> Option<&str> {
     let keyword = match KEYWORD_REGEX.captures(line) {
         Some(caps) => caps.get(1).map_or("", |m| m.as_str()),
         None => return None,
     };
 
-    Some(&keyword)
+    Some(keyword)
+}
+
+/// Supplementary function which returns a Vec of all keywords within the env
+///
+/// This function accepts the EnvContents struct available in the
+/// [utils](../utils/index.html) module.
+pub fn list_available_keywords(env: &EnvContents) -> Vec<&str> {
+    let lines = env.contents.lines();
+    let lines = lines.filter_map(|l| resolve_keyword(l));
+
+    lines.collect()
 }
 
 /// Core function which performs all parsing and returns results
@@ -175,6 +191,46 @@ mod resolve_keyword_tests {
 }
 
 #[cfg(test)]
+mod list_available_keywords_tests {
+    use super::*;
+
+    #[test]
+    fn empty_if_no_keywords() {
+        let provided = String::from(
+            "
+KEY=value
+KEY=value
+
+KEY=value
+    ",
+        );
+        let env = EnvContents::new(provided.clone());
+        let expected = vec![""; 0];
+
+        assert_eq!(list_available_keywords(&env), expected)
+    }
+
+    #[test]
+    fn returns_all_keywords() {
+        let provided = String::from(
+            "
+# ++ a ++
+# ++ b ++
+KEY=value
+KEY=value
+
+# ++ c ++
+KEY=value
+    ",
+        );
+        let env = EnvContents::new(provided.clone());
+        let expected = vec!["a", "b", "c"];
+
+        assert_eq!(list_available_keywords(&env), expected)
+    }
+}
+
+#[cfg(test)]
 mod parse_env_tests {
     use super::*;
 
@@ -182,10 +238,10 @@ mod parse_env_tests {
     fn err_if_keyword_not_found() {
         let provided = String::from(
             "
-    KEY=value
-    KEY=value
+KEY=value
+KEY=value
 
-    KEY=value
+KEY=value
     ",
         );
         let env = EnvContents::new(provided.clone());
