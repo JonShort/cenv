@@ -2,7 +2,7 @@
 name = "cenv_core"
 version = "0.2.0"
 authors = ["JonShort <JonShort@users.noreply.github.com>"]
-edition = "2018"
+edition = "2021"
 homepage = "https://github.com/JonShort/cenv"
 description = "The internals for the cenv project, designed to be shared amongst different implementations"
 license = "MIT"
