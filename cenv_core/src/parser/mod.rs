@@ -45,12 +45,11 @@ fn parse_as_inactive(line: &str) -> String {
 /// This function accepts the EnvContents struct available in the
 /// [utils](../utils/index.html) module.
 pub fn resolve_keyword(line: &str) -> Option<&str> {
-    let keyword = match KEYWORD_REGEX.captures(line) {
-        Some(caps) => caps.get(1).map_or("", |m| m.as_str()),
-        None => return None,
+    if let Some(captures) = KEYWORD_REGEX.captures(line) {
+        return Some(captures.get(1).map_or("", |m| m.as_str()));
     };
 
-    Some(keyword)
+    None
 }
 
 /// Supplementary function which returns a Vec of all keywords within the env
