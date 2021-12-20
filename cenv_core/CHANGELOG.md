@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Changed
 - Target [rust 2021](https://blog.rust-lang.org/2021/10/21/Rust-1.56.0.html#rust-2021)
+- Comments are now valid within "cenv" blocks and will be ignored by the parser
 
 ## 0.2.0 - 2021-08-02
 ### Added

@@ -12,6 +12,7 @@ use regex::Regex;
 
 lazy_static! {
     static ref KEYWORD_REGEX: Regex = Regex::new(r"^#+ *\+\+ *(\w+)").unwrap();
+    static ref VAR_REGEX: Regex = Regex::new(r"^# *(\S+=\S*)").unwrap();
 }
 
 #[derive(PartialEq)]
@@ -22,15 +23,11 @@ enum ParseStatus {
 }
 
 fn parse_as_active(line: &str) -> String {
-    let mut line_chars = line.chars();
-    match line_chars.next() {
-        Some('#') => {
-            line_chars.next();
-            String::from(line_chars.as_str())
-        }
-        Some(_) => String::from(line),
-        None => String::from(line),
-    }
+    if let Some(captures) = VAR_REGEX.captures(line) {
+        return String::from(captures.get(1).map_or("", |m| m.as_str()));
+    };
+
+    String::from(line)
 }
 
 fn parse_as_inactive(line: &str) -> String {
@@ -48,12 +45,11 @@ fn parse_as_inactive(line: &str) -> String {
 /// This function accepts the EnvContents struct available in the
 /// [utils](../utils/index.html) module.
 pub fn resolve_keyword(line: &str) -> Option<&str> {
-    let keyword = match KEYWORD_REGEX.captures(line) {
-        Some(caps) => caps.get(1).map_or("", |m| m.as_str()),
-        None => return None,
+    if let Some(captures) = KEYWORD_REGEX.captures(line) {
+        return Some(captures.get(1).map_or("", |m| m.as_str()));
     };
 
-    Some(keyword)
+    None
 }
 
 /// Supplementary function which returns a Vec of all keywords within the env
@@ -62,7 +58,7 @@ pub fn resolve_keyword(line: &str) -> Option<&str> {
 /// [utils](../utils/index.html) module.
 pub fn list_available_keywords(env: &EnvContents) -> Vec<&str> {
     let lines = env.contents.lines();
-    let lines = lines.filter_map(|l| resolve_keyword(l));
+    let lines = lines.filter_map(resolve_keyword);
 
     lines.collect()
 }
@@ -130,8 +126,25 @@ mod parse_as_active_tests {
     }
 
     #[test]
-    fn removes_hash() {
-        assert_eq!(parse_as_active("# testing"), "testing");
+    fn removes_hash_from_var() {
+        assert_eq!(parse_as_active("# VAR=true"), "VAR=true");
+    }
+
+    #[test]
+    fn removes_hash_from_complex_var() {
+        assert_eq!(
+            parse_as_active("# 0varl337=123-yrHks~\""),
+            "0varl337=123-yrHks~\""
+        );
+    }
+
+    #[test]
+    fn keeps_hash_from_comment() {
+        assert_eq!(
+            parse_as_active("# this should be VAR=true"),
+            "# this should be VAR=true"
+        );
+        assert_eq!(parse_as_active("# COMMENT-true"), "# COMMENT-true");
     }
 }
 
