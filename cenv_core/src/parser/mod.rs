@@ -59,7 +59,7 @@ pub fn resolve_keyword(line: &str) -> Option<&str> {
 /// [utils](../utils/index.html) module.
 pub fn list_available_keywords(env: &EnvContents) -> Vec<&str> {
     let lines = env.contents.lines();
-    let lines = lines.filter_map(|l| resolve_keyword(l));
+    let lines = lines.filter_map(resolve_keyword);
 
     lines.collect()
 }
