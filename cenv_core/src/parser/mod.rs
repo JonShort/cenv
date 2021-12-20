@@ -9,6 +9,7 @@
 
 use crate::utils::{Config, EnvContents};
 use regex::Regex;
+use std::collections::HashMap;
 
 lazy_static! {
     static ref KEYWORD_REGEX: Regex = Regex::new(r"^#+ *\+\+ *(\w+)").unwrap();
@@ -57,10 +58,15 @@ pub fn resolve_keyword(line: &str) -> Option<&str> {
 /// This function accepts the EnvContents struct available in the
 /// [utils](../utils/index.html) module.
 pub fn list_available_keywords(env: &EnvContents) -> Vec<&str> {
-    let lines = env.contents.lines();
-    let lines = lines.filter_map(resolve_keyword);
+    let mut cache = HashMap::new();
 
-    lines.collect()
+    for line in env.contents.lines() {
+        if let Some(keyword) = resolve_keyword(line) {
+            cache.insert(keyword, 1);
+        }
+    }
+
+    cache.into_keys().collect()
 }
 
 /// Core function which performs all parsing and returns results
@@ -237,9 +243,43 @@ KEY=value
     ",
         );
         let env = EnvContents::new(provided.clone());
-        let expected = vec!["a", "b", "c"];
+        let mut expected = vec!["a", "b", "c"];
+        let mut result = list_available_keywords(&env);
 
-        assert_eq!(list_available_keywords(&env), expected)
+        // allow default sorting - if they're the same there'll be a match
+        expected.sort();
+        result.sort();
+
+        assert_eq!(result, expected)
+    }
+
+    #[test]
+    fn dedup_keywords() {
+        let provided = String::from(
+            "
+# ++ a ++
+# ++ a ++
+# ++ a ++
+# ++ b ++
+# ++ b ++
+KEY=value
+KEY=value
+
+
+# ++ c ++
+# ++ c ++
+KEY=value
+    ",
+        );
+        let env = EnvContents::new(provided.clone());
+        let mut expected = vec!["a", "b", "c"];
+        let mut result = list_available_keywords(&env);
+
+        // allow default sorting - if they're the same there'll be a match
+        expected.sort();
+        result.sort();
+
+        assert_eq!(result, expected)
     }
 }
 
