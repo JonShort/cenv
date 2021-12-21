@@ -1,6 +1,6 @@
 [package]
 name = "cenv"
-version = "1.1.0"
+version = "1.2.0"
 authors = ["JonShort <JonShort@users.noreply.github.com>"]
 edition = "2021"
 license = "MIT"
