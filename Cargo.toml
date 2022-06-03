@@ -1,3 +1,4 @@
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [package]
 name = "cenv"
 version = "1.2.0"
@@ -6,7 +7,11 @@ edition = "2021"
 license = "MIT"
 repository = "https://github.com/JonShort/cenv"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[profile.release]
+codegen-units = 1 # Maximum size-reduction optimisations
+lto = true # Enable "link time optimisation"
+panic = "abort" # Remove lengthy stack traces
+strip = true  # Automatically strip symbols from the binary.
 
 [dependencies]
 cenv_core = { path = "./cenv_core" }
