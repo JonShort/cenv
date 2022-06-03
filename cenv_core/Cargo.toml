@@ -11,4 +11,4 @@ include = ["src/**/*", "LICENSE"]
 
 [dependencies]
 lazy_static = "1.4"
-regex = "1.5.4"
+regex = "1.5.6"
