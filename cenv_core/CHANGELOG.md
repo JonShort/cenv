@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Changed
-- [regex](https://crates.io/crates/regex) crate dependency bumped to [1.5.6](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md#156-2022-05-20)
+- [regex](https://crates.io/crates/regex) crate dependency bumped to [1.7.1](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md#171-2023-01-09)
 
 ## 0.3.0 - 2021-12-21
 ### Changed
