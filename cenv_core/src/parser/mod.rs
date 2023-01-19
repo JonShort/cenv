@@ -223,7 +223,7 @@ KEY=value
 KEY=value
     ",
         );
-        let env = EnvContents::new(provided.clone());
+        let env = EnvContents::new(provided);
         let expected = vec![""; 0];
 
         assert_eq!(list_available_keywords(&env), expected)
@@ -242,7 +242,7 @@ KEY=value
 KEY=value
     ",
         );
-        let env = EnvContents::new(provided.clone());
+        let env = EnvContents::new(provided);
         let mut expected = vec!["a", "b", "c"];
         let mut result = list_available_keywords(&env);
 
@@ -271,7 +271,7 @@ KEY=value
 KEY=value
     ",
         );
-        let env = EnvContents::new(provided.clone());
+        let env = EnvContents::new(provided);
         let mut expected = vec!["a", "b", "c"];
         let mut result = list_available_keywords(&env);
 
@@ -297,7 +297,7 @@ KEY=value
 KEY=value
     ",
         );
-        let env = EnvContents::new(provided.clone());
+        let env = EnvContents::new(provided);
         let args = vec![String::from("_"), String::from("keyword")];
         let config = Config::new_from_args(args.into_iter()).unwrap();
 
