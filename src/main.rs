@@ -5,10 +5,17 @@ use cenv_core::parser;
 use cenv_core::utils;
 
 fn print_keywords(env: &utils::EnvContents) {
-    println!("Available keywords:");
+    let available_keywords = parser::list_available_keywords(env);
 
-    for k in parser::list_available_keywords(env).into_iter() {
-        println!("- {}", k);
+    if available_keywords.is_empty() {
+        println!("Looks like you haven't added the cenv pattern to your .env file");
+        println!("See how here - https://github.com/JonShort/cenv#usage");
+    } else {
+        println!("Available keywords:");
+
+        for k in available_keywords.into_iter() {
+            println!("- {}", k);
+        }
     }
 }
 
