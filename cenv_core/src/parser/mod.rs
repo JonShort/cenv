@@ -132,8 +132,16 @@ mod parse_as_active_tests {
     }
 
     #[test]
-    fn removes_hash_from_var() {
+    fn removes_hash_from_var_variant_1() {
         assert_eq!(parse_as_active("# VAR=true"), "VAR=true");
+    }
+
+    #[test]
+    fn removes_hash_from_var_variant_2() {
+        assert_eq!(
+            parse_as_active("# TEST_VAR_ENTRY=some??weird__43££combo*~*😃*929100"),
+            "TEST_VAR_ENTRY=some??weird__43££combo*~*😃*929100"
+        );
     }
 
     #[test]
