@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [BREAKING] Keyword line formatting is now stricter, e.g. `##++ thing` would previously match, now single comment & space are required, e.g. `# ++ thing`
 - [BREAKING] The env var regex now expects env var names to follow [the UNIX-style standard for environment variables](https://pubs.opengroup.org/onlinepubs/7908799/xbd/envvar.html#:~:text=Environment%20variable%20names%20used%20by,the%20presence%20of%20such%20names.), but allows the following `0-9`, `A-Z`, `a-z`, `_`
 - Keywords can now contain dashes
+- Updated the [regex](https://crates.io/crates/regex) dependency to 1.10.x
 
 ## 0.3.1 - 2023-01-15
 ### Changed
