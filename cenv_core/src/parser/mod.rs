@@ -24,11 +24,10 @@ enum ParseStatus {
 }
 
 fn parse_as_active(line: &str) -> String {
-    if let Some(captures) = VAR_REGEX.captures(line) {
-        return String::from(captures.get(1).map_or("", |m| m.as_str()));
-    };
-
-    String::from(line)
+    match VAR_REGEX.captures(line).map(|caps| caps.extract()) {
+        Some((_, [var])) => String::from(var),
+        _ => String::from(line),
+    }
 }
 
 fn parse_as_inactive(line: &str) -> String {
@@ -46,11 +45,10 @@ fn parse_as_inactive(line: &str) -> String {
 /// This function accepts the EnvContents struct available in the
 /// [utils](../utils/index.html) module.
 pub fn resolve_keyword(line: &str) -> Option<&str> {
-    if let Some(captures) = KEYWORD_REGEX.captures(line) {
-        return Some(captures.get(1).map_or("", |m| m.as_str()));
-    };
-
-    None
+    match KEYWORD_REGEX.captures(line).map(|caps| caps.extract()) {
+        Some((_, [keyword])) => Some(keyword),
+        _ => None,
+    }
 }
 
 /// Supplementary function which returns a Vec of all keywords within the env
