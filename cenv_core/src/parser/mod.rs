@@ -12,8 +12,8 @@ use regex::Regex;
 use std::collections::HashMap;
 
 lazy_static! {
-    static ref KEYWORD_REGEX: Regex = Regex::new(r"^#+ *\+\+ *(\w+)").unwrap();
-    static ref VAR_REGEX: Regex = Regex::new(r"^# *(\S+=\S*)").unwrap();
+    static ref KEYWORD_REGEX: Regex = Regex::new(r"^# \+\+ ([0-9A-Za-z_-]{1,100})").unwrap();
+    static ref VAR_REGEX: Regex = Regex::new(r"^# ?([[:word:]]+=\S*)").unwrap();
 }
 
 #[derive(PartialEq)]
@@ -132,8 +132,16 @@ mod parse_as_active_tests {
     }
 
     #[test]
-    fn removes_hash_from_var() {
+    fn removes_hash_from_var_variant_1() {
         assert_eq!(parse_as_active("# VAR=true"), "VAR=true");
+    }
+
+    #[test]
+    fn removes_hash_from_var_variant_2() {
+        assert_eq!(
+            parse_as_active("# TEST_VAR_ENTRY=some??weird__43££combo*~*😃*929100"),
+            "TEST_VAR_ENTRY=some??weird__43££combo*~*😃*929100"
+        );
     }
 
     #[test]
@@ -194,18 +202,31 @@ mod resolve_keyword_tests {
     }
 
     #[test]
+    fn none_if_invalid_formatted_variant_1() {
+        assert_eq!(resolve_keyword("#++ keyword"), None);
+    }
+
+    #[test]
+    fn none_if_invalid_formatted_variant_2() {
+        assert_eq!(resolve_keyword("## ++ keyword ++"), None);
+    }
+
+    #[test]
     fn word_if_formatted_variant_1() {
         assert_eq!(resolve_keyword("# ++ keyword ++"), Some("keyword"));
     }
 
     #[test]
     fn word_if_formatted_variant_2() {
-        assert_eq!(resolve_keyword("#++ keyword"), Some("keyword"));
+        assert_eq!(resolve_keyword("# ++ my-env ++"), Some("my-env"));
     }
 
     #[test]
     fn word_if_formatted_variant_3() {
-        assert_eq!(resolve_keyword("## ++ keyword ++"), Some("keyword"));
+        assert_eq!(
+            resolve_keyword("# ++ prod_environment ++"),
+            Some("prod_environment")
+        );
     }
 }
 
