@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+
+## 1.0.0 - 2024-03-22
 ### Changed
 - [BREAKING] Keyword line formatting is now stricter, e.g. `##++ thing` would previously match, now single comment & space are required, e.g. `# ++ thing`
 - [BREAKING] The env var regex now expects env var names to follow [the UNIX-style standard for environment variables](https://pubs.opengroup.org/onlinepubs/7908799/xbd/envvar.html#:~:text=Environment%20variable%20names%20used%20by,the%20presence%20of%20such%20names.), but allows the following `0-9`, `A-Z`, `a-z`, `_`
